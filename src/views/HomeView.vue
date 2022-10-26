@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import City from '@/components/panel/City.vue'
-import Ipsum from '@/components/panel/Ipsum.vue'
-import Temperature from '@/components/panel/Temperature.vue'
+import Panel from '@/components/panel/Panel.vue'
 </script>
 
 <script lang="ts">
@@ -9,20 +7,7 @@ import Temperature from '@/components/panel/Temperature.vue'
 </script>
 
 <template>
-    <div>
-        <div class="container">
-            <City />
-        </div>
-        <div class="grid-container">
-            <Temperature />
-            <div class="container">
-                <Ipsum />
-                <Ipsum />
-                <Ipsum />
-                <Ipsum />
-            </div>
-        </div>
-    </div>
+    <Panel />
 </template>
 
 <style lang="scss" scoped>

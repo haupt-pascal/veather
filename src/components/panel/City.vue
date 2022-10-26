@@ -1,12 +1,24 @@
-<script lang="ts" setup>
-
+<script>
+export default {
+    name: 'app',
+    data () {
+        return {
+            query: '',
+        }
+    },
+}
 </script>
 
 
 <template>
     <div>
         <div class="city">
-            <input type="text" placeholder="enter your city here...">
+            <input 
+            type="text" 
+            placeholder="enter your city here..."
+            v-model="query"
+            v-on:keypress="fetchWeather"
+            />
         </div>
     </div>
 </template>
