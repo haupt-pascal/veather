@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500&display=swap');
+
+/* VARIABLES */
+
+$primary: #000;
+$background: #F8F8FB;
+
+
+/* PRESETS */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    font-family: 'Montserrat', sans-serif;
+    background: $background;
+}
+
+a {
+    text-decoration: none;
+    color: $primary;
+}
+
