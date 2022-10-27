@@ -10,7 +10,7 @@ export default {
         }
     },
     methods: {
-        fetchWeather (e: any) {
+        fetchWeather (e) {
             if (e.key == "Enter") {
                 fetch(`${this.url_base}weather?q=${this.query}&units=metric&APPID=${this.api_key}`)
                 .then(res => {
@@ -18,7 +18,7 @@ export default {
                 }).then(this.setResults);
             }
         },
-        setResults (results: any)  {
+        setResults (results)  {
             this.weather = results;
         },
         dateBuilder () {
