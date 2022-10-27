@@ -1,4 +1,58 @@
-<script>
+<script lang="ts">
+export interface Coord {
+    lon: number;
+    lat: number;
+}
+
+export interface Weather {
+    id: number;
+    main: string;
+    description: string;
+    icon: string;
+}
+
+export interface Main {
+    temp: number;
+    feels_like: number;
+    temp_min: number;
+    temp_max: number;
+    pressure: number;
+    humidity: number;
+}
+
+export interface Wind {
+    speed: number;
+    deg: number;
+}
+
+export interface Clouds {
+    all: number;
+}
+
+export interface Sys {
+    type: number;
+    id: number;
+    country: string;
+    sunrise: number;
+    sunset: number;
+}
+
+export interface WeatherResponse {
+    coord: Coord;
+    weather: Weather[];
+    base: string;
+    main: Main;
+    visibility: number;
+    wind: Wind;
+    clouds: Clouds;
+    dt: number;
+    sys: Sys;
+    timezone: number;
+    id: number;
+    name: string;
+    cod: number;
+}
+
 export default {
     name: 'app',
     data () {
@@ -6,11 +60,11 @@ export default {
             api_key: '6c1c180d51d2cc24b06fbe9309c3f4af',
             url_base: 'https://api.openweathermap.org/data/2.5/',
             query: '',
-            weather: {}
+            weather: {} as WeatherResponse,
         }
     },
     methods: {
-        fetchWeather (e) {
+        fetchWeather (e: any) {
             if (e.key == "Enter") {
                 fetch(`${this.url_base}weather?q=${this.query}&units=metric&APPID=${this.api_key}`)
                 .then(res => {
@@ -18,7 +72,7 @@ export default {
                 }).then(this.setResults);
             }
         },
-        setResults (results)  {
+        setResults (results: any)  {
             this.weather = results;
         },
         dateBuilder () {
@@ -56,7 +110,7 @@ export default {
                 <h3 class="temperature-title">
                     temperature.
                 </h3>
-                <div class="temperature-container" v-if="typeof weather.main != 'undefined'">
+                <div class="temperature-container" v-if="weather.main != undefined">
                     <h3>
                         {{ weather.name }}
                     </h3>
@@ -76,7 +130,7 @@ export default {
             </div>
             <div class="container">
                 <div class="ipsum-container">
-                    <h3 class="ipsum-title" :class="typeof weather.main != 'undefined' && weather.main.temp > 16 ? 
+                    <h3 class="ipsum-title" :class="weather.main != undefined && weather.main.temp > 16 ? 
                     'warm' : ''">
                         ipsum.
                     </h3>
