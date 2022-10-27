@@ -1,57 +1,8 @@
 <script lang="ts">
-export interface Coord {
-    lon: number;
-    lat: number;
-}
+import type { Forecast, WeatherResponse } from "@/@types/weather";
+import axios from "axios";
+import {format} from "date-fns";
 
-export interface Weather {
-    id: number;
-    main: string;
-    description: string;
-    icon: string;
-}
-
-export interface Main {
-    temp: number;
-    feels_like: number;
-    temp_min: number;
-    temp_max: number;
-    pressure: number;
-    humidity: number;
-}
-
-export interface Wind {
-    speed: number;
-    deg: number;
-}
-
-export interface Clouds {
-    all: number;
-}
-
-export interface Sys {
-    type: number;
-    id: number;
-    country: string;
-    sunrise: number;
-    sunset: number;
-}
-
-export interface WeatherResponse {
-    coord: Coord;
-    weather: Weather[];
-    base: string;
-    main: Main;
-    visibility: number;
-    wind: Wind;
-    clouds: Clouds;
-    dt: number;
-    sys: Sys;
-    timezone: number;
-    id: number;
-    name: string;
-    cod: number;
-}
 
 export default {
     name: 'app',
@@ -61,19 +12,43 @@ export default {
             url_base: 'https://api.openweathermap.org/data/2.5/',
             query: '',
             weather: {} as WeatherResponse,
+            forecast: {} as Forecast,
         }
     },
     methods: {
-        fetchWeather (e: any) {
-            if (e.key == "Enter") {
-                fetch(`${this.url_base}weather?q=${this.query}&units=metric&APPID=${this.api_key}`)
-                .then(res => {
-                    return res.json();
-                }).then(this.setResults);
-            }
+        format: format,
+        fetchWeather () {
+            // axios way
+            // axios.get(`${this.url_base}weather`, {
+            //     params: {
+            //         q: this.query,
+            //         units: "metric",
+            //         appid: this.api_key
+            //     }
+            // }).then(res => {
+            //     if (!res.data) {
+            //         console.error("HEEELP");
+            //         return;
+            //     }
+            //     this.setResults(res.data);
+            // });
+            // fetch way
+            fetch(`${this.url_base}weather?q=${this.query}&units=metric&APPID=${this.api_key}`)
+            .then(res => {
+                return res.json();
+            }).then((res) => {
+                this.weather = res;
+                this.fetchWeather3();
+            });
         },
-        setResults (results: any)  {
-            this.weather = results;
+        fetchWeather3 () {
+            const coordinates = this.getCoordinates();
+            fetch(`${this.url_base}/forecast?lat=${coordinates.lat}&lon=${coordinates.lon}&units=metric&appid=${this.api_key}`)
+            .then(res => {
+                return res.json();
+            }).then((res) => {
+                this.forecast = res;
+            });
         },
         dateBuilder () {
             let d = new Date();
@@ -86,6 +61,12 @@ export default {
             let year = d.getFullYear();
 
             return `${day}, ${date} ${month} ${year}`;
+        },
+        getCoordinates(): {lat: number, lon: number} {
+            return {
+                lat: this.weather.coord.lat,
+                lon: this.weather.coord.lon
+            }
         }
     }
 }
@@ -101,54 +82,159 @@ export default {
                 type="text" 
                 placeholder="enter your city here..."
                 v-model="query"
-                v-on:keypress="fetchWeather"
+                @keypress.enter="fetchWeather()"
                 />
             </div>
         </div>
         <div class="grid-container">
-            <div class="temperature">
+            <div class="temperature" v-if="weather.main != undefined">
                 <h3 class="temperature-title">
                     temperature.
                 </h3>
-                <div class="temperature-container" v-if="weather.main != undefined">
-                    <h3>
-                        {{ weather.name }}
-                    </h3>
-                    <h3>
-                        {{ weather.sys.country }}
-                    </h3>
-                    <h3>
-                        {{ dateBuilder() }}
-                    </h3>
-                    <h3>
+                <div class="temperature-container">
+                    <span class="temperature-count">
                         {{ Math.round(weather.main.temp) }}°C
+                    </span>
+                    <br>
+                    <span class="temperature-description">
+                        {{ weather.weather[0].main }}
+                    </span>
+                    <div class="temperature-information-container">
+                        <h3>
+                            Min: {{ Math.round(weather.main.temp_min) }}°C
+                        </h3>
+                        <h3>
+                            Max: {{ Math.round(weather.main.temp_max) }}°C
+                        </h3>
+                    </div>
+                    <h3>
+                        Feels like: {{ Math.round(weather.main.feels_like) }}°C
                     </h3>
                     <h3>
-                        {{ weather.weather[0].main }}
+                        {{ weather.clouds }}
                     </h3>
                 </div>
             </div>
             <div class="container">
-                <div class="ipsum-container">
-                    <h3 class="ipsum-title" :class="weather.main != undefined && weather.main.temp > 16 ? 
-                    'warm' : ''">
-                        ipsum.
-                    </h3>
-                </div>
-                <div class="ipsum-container">
+                <div class="ipsum-container" v-if="weather.main != undefined">
                     <h3 class="ipsum-title">
-                        ipsum.
-                    </h3>
+                        today.
+                    </h3>              
+                    <p class="weather-information">
+                        {{ format(new Date (dateBuilder()), 'dd MMMM yyyy - HH:mm:ss') }}
+                    </p>
+                    <div class="weather-information-container">
+                        <p class="weather-information">
+                            sunrise: {{ format(new Date (weather.sys.sunrise * 1000), 'HH:mm:ss') }}
+                        </p>               
+                        <p class="weather-information">
+                            sunset: {{ format(new Date (weather.sys.sunset * 1000), 'HH:mm:ss') }}
+                        </p>   
+                    </div> 
+                    <div class="weather-information-container">
+                        <p class="weather-information">
+                            act-temp: {{ Math.round(weather.main.temp) }}°C
+                        </p>
+                        <p class="weather-information">
+                            feels like: {{ Math.round(weather.main.feels_like) }}°C
+                        </p>
+                        <p class="weather-information">
+                            max-temp: {{ Math.round(weather.main.temp_max) }}°C
+                        </p>
+                        <p class="weather-information">
+                            max-temp: {{ Math.round(weather.main.temp_min) }}°C
+                        </p>
+                    </div> 
                 </div>
-                <div class="ipsum-container">
+                <div class="ipsum-container" v-if="weather.main != undefined">
                     <h3 class="ipsum-title">
-                        ipsum.
-                    </h3>
+                        forecast (6-hr).
+                    </h3>          
+                    <p class="weather-information">
+                        {{ format(new Date (forecast.list[2].dt_txt), 'dd MMMM yyyy - HH:mm:ss') }}
+                    </p>
+                    <div class="weather-information-container">
+                        <p class="weather-information">
+                            wind: {{ forecast.list[2].wind.speed }} meter/sec
+                        </p>               
+                        <p class="weather-information">
+                            description: {{ forecast.list[2].weather[0].description }}
+                        </p>
+                    </div>             
+                    <div class="weather-information-container">
+                        <p class="weather-information">
+                            act-temp: {{ Math.round(forecast.list[2].main.temp) }}°C
+                        </p> 
+                        <p class="weather-information">
+                            feels like: {{ Math.round(forecast.list[2].main.feels_like) }}°C
+                        </p> 
+                        <p class="weather-information">
+                            max-temp: {{ Math.round(forecast.list[2].main.temp_max) }}°C
+                        </p> 
+                        <p class="weather-information">
+                            min-temp: {{ Math.round(forecast.list[2].main.temp_min) }}°C
+                        </p> 
+                    </div>
                 </div>
-                <div class="ipsum-container">
+                <div class="ipsum-container" v-if="weather.main != undefined">
                     <h3 class="ipsum-title">
-                        ipsum.
-                    </h3>
+                        forecast (24-hr).
+                    </h3>          
+                    <p class="weather-information">
+                        {{ format(new Date (forecast.list[8].dt_txt), 'dd MMMM yyyy - HH:mm:ss') }}
+                    </p>
+                    <div class="weather-information-container">
+                        <p class="weather-information">
+                            wind: {{ forecast.list[8].wind.speed }} meter/sec
+                        </p>               
+                        <p class="weather-information">
+                            description: {{ forecast.list[8].weather[0].description }}
+                        </p>
+                    </div>              
+                    <div class="weather-information-container">
+                        <p class="weather-information">
+                            act-temp: {{ Math.round(forecast.list[8].main.temp) }}°C
+                        </p> 
+                        <p class="weather-information">
+                            feels like: {{ Math.round(forecast.list[8].main.feels_like) }}°C
+                        </p> 
+                        <p class="weather-information">
+                            max-temp: {{ Math.round(forecast.list[8].main.temp_max) }}°C
+                        </p> 
+                        <p class="weather-information">
+                            min-temp: {{ Math.round(forecast.list[8].main.temp_min) }}°C
+                        </p> 
+                    </div>
+                </div>
+                <div class="ipsum-container" v-if="weather.main != undefined">
+                    <h3 class="ipsum-title">
+                        forecast (48-hr).
+                    </h3>          
+                    <p class="weather-information">
+                        {{ format(new Date (forecast.list[16].dt_txt), 'dd MMMM yyyy - HH:mm:ss') }}
+                    </p>
+                    <div class="weather-information-container">
+                        <p class="weather-information">
+                            wind: {{ forecast.list[16].wind.speed }} meter/sec
+                        </p>               
+                        <p class="weather-information">
+                            description: {{ forecast.list[16].weather[0].description }}
+                        </p>
+                    </div>                 
+                    <div class="weather-information-container">
+                        <p class="weather-information">
+                            act-temp: {{ Math.round(forecast.list[16].main.temp) }}°C
+                        </p> 
+                        <p class="weather-information">
+                            feels like: {{ Math.round(forecast.list[16].main.feels_like) }}°C
+                        </p> 
+                        <p class="weather-information">
+                            max-temp: {{ Math.round(forecast.list[16].main.temp_max) }}°C
+                        </p> 
+                        <p class="weather-information">
+                            min-temp: {{ Math.round(forecast.list[16].main.temp_min) }}°C
+                        </p> 
+                    </div>
                 </div>
             </div>
         </div>
@@ -185,7 +271,7 @@ export default {
             -webkit-box-shadow: 0px 2px 40px 0px rgba(0,0,0,0.025);
             -moz-box-shadow: 0px 2px 40px 0px rgba(0,0,0,0.025);
             box-shadow: 0px 2px 40px 0px rgba(0,0,0,0.025);
-
+            padding: 32px;
             &:hover {
                 border: .5px solid #DEE2FF;
                 -webkit-box-shadow: 0px 2px 40px 0px rgba(0,0,0,0.05);
@@ -195,13 +281,21 @@ export default {
 
             .ipsum-title {
                 text-align: center;
-                margin-top: 32px;
                 margin-bottom: 32px;
                 font-size: 25px;
 
                 &.warm {
                     color: red;
                 }
+            }
+
+            .weather-information {
+                margin: 12px 0;
+                font-weight: 500;
+            }
+
+            .weather-information-container {
+                margin-top: 32px;
             }
         }
 
@@ -228,6 +322,18 @@ export default {
                 margin-top: 32px;
                 margin-bottom: 32px;
                 font-size: 25px;
+            }
+
+            .temperature-container {
+                text-align: center;
+                padding-top: 64px;
+                .temperature-count {
+                    font-size: 128px;
+                    font-weight: 600;
+                }
+                .temperature-description {
+                    font-size: 64px;
+                }
             }
         }
     }
