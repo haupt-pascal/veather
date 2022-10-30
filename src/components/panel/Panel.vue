@@ -100,16 +100,15 @@ export default {
                     </span>
                     <div class="temperature-information-container">
                         <!-- Day -->
-                        <img src="@/assets/icons/sun/day.png" v-if="weather.weather[0].main.toLowerCase() == 'clear'">
-                        <!-- Night 
-                        <img src="@/assets/icons/moon/night.png" v-if="weather.weather[0].main.toLowerCase() == 'clear'">
-                        -->
+                        <img src="@/assets/icons/sun/day.png" v-if="weather.weather[0].main.toLowerCase() == 'clear' && format(new Date (dateBuilder()), 'HH') < '18'">
+                        <!-- Night -->
+                        <img src="@/assets/icons/moon/night.png" v-if="weather.weather[0].main.toLowerCase() == 'clear' && format(new Date (dateBuilder()), 'HH') > '18'">
                         <!-- Cloud -->
                         <img src="@/assets/icons/cloud/cloud_rain.png" v-if="weather.weather[0].main.toLowerCase() == 'shower rain'">
                         <img src="@/assets/icons/cloud/cloud_thunderstorm.png" v-if="weather.weather[0].main.toLowerCase() == 'thunderstorm'">
                         <img src="@/assets/icons/cloud/cloud_snow.png" v-if="weather.weather[0].main.toLowerCase() == 'thunderstorm'">
                         <img src="@/assets/icons/cloud/cloud.png" v-if="weather.weather[0].main.toLowerCase() == 'clouds'">
-                        <img src="@/assets/icons/cloud/cloud.png" v-if="weather.weather[0].main.toLowerCase() == 'scattered clouds'">
+                        <img src="@/assets/icons/cloud/cloud.png" v-if="weather.weather[0].main.toLowerCase() == 'cloud'">
                         <img src="@/assets/icons/cloud/cloud.png" v-if="weather.weather[0].main.toLowerCase() == 'broken clouds'">
                         <img src="@/assets/icons/sun/day_cloudy.png" v-if="weather.weather[0].main.toLowerCase() == 'few clouds'">
                     </div>
