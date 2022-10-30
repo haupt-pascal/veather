@@ -71,7 +71,6 @@ export default {
     }
 }
 
-
 </script>
 
 <template>
@@ -100,19 +99,20 @@ export default {
                         {{ weather.weather[0].main }}
                     </span>
                     <div class="temperature-information-container">
-                        <h3>
-                            Min: {{ Math.round(weather.main.temp_min) }}°C
-                        </h3>
-                        <h3>
-                            Max: {{ Math.round(weather.main.temp_max) }}°C
-                        </h3>
+                        <!-- Day -->
+                        <img src="@/assets/icons/sun/day.png" v-if="weather.weather[0].main.toLowerCase() == 'clear'">
+                        <!-- Night 
+                        <img src="@/assets/icons/moon/night.png" v-if="weather.weather[0].main.toLowerCase() == 'clear'">
+                        -->
+                        <!-- Cloud -->
+                        <img src="@/assets/icons/cloud/cloud_rain.png" v-if="weather.weather[0].main.toLowerCase() == 'shower rain'">
+                        <img src="@/assets/icons/cloud/cloud_thunderstorm.png" v-if="weather.weather[0].main.toLowerCase() == 'thunderstorm'">
+                        <img src="@/assets/icons/cloud/cloud_snow.png" v-if="weather.weather[0].main.toLowerCase() == 'thunderstorm'">
+                        <img src="@/assets/icons/cloud/cloud.png" v-if="weather.weather[0].main.toLowerCase() == 'clouds'">
+                        <img src="@/assets/icons/cloud/cloud.png" v-if="weather.weather[0].main.toLowerCase() == 'scattered clouds'">
+                        <img src="@/assets/icons/cloud/cloud.png" v-if="weather.weather[0].main.toLowerCase() == 'broken clouds'">
+                        <img src="@/assets/icons/sun/day_cloudy.png" v-if="weather.weather[0].main.toLowerCase() == 'few clouds'">
                     </div>
-                    <h3>
-                        Feels like: {{ Math.round(weather.main.feels_like) }}°C
-                    </h3>
-                    <h3>
-                        {{ weather.clouds }}
-                    </h3>
                 </div>
             </div>
             <div class="container">
@@ -142,7 +142,10 @@ export default {
                             max-temp: {{ Math.round(weather.main.temp_max) }}°C
                         </p>
                         <p class="weather-information">
-                            max-temp: {{ Math.round(weather.main.temp_min) }}°C
+                            min-temp: {{ Math.round(weather.main.temp_min) }}°C
+                        </p>
+                        <p class="weather-information">
+                            clouds: {{ weather.clouds.all }}%
                         </p>
                     </div> 
                 </div>
@@ -253,7 +256,7 @@ export default {
         height: 100%;
         min-height: 60vh;
         width: 100%;
-        padding: 0 5%;
+        padding: 0 5% 10vh 5%;
 
         .container {
             display: grid;
@@ -334,12 +337,19 @@ export default {
                 .temperature-description {
                     font-size: 64px;
                 }
+                .temperature-information-container {
+                    margin: 64px auto;
+
+                    img {
+                        width: 420px;
+                    }
+                }
             }
         }
     }
 
     .city {
-        margin: 10vh 0;
+        padding: 10vh 0;
         display: flex;
         align-items: center;
         justify-content: center;

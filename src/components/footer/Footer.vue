@@ -56,7 +56,6 @@ function navigationResponsive() {
         padding: 0 5%;
         background: #fff;
         font-size: 14px;
-        margin-top: 10vh;
         .footer--left {
             height: 100%;
             display: flex;

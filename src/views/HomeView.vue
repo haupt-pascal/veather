@@ -7,27 +7,14 @@ import Panel from '@/components/panel/Panel.vue'
 </script>
 
 <template>
-    <Panel />
+    <div class="container">
+        <Panel />
+    </div>
 </template>
 
 <style lang="scss" scoped>
     .container {
-        width: 100%;
-    }
-
-    .grid-container {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 32px;
-        height: 100%;
-        min-height: 60vh;
-        width: 100%;
-        padding: 0 5%;
-        .container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 32px;
-        }
+        background: url('@/assets/pattern-3.png');
     }
 
 </style>
