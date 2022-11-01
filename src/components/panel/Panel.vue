@@ -105,12 +105,14 @@ export default {
                         <img src="@/assets/icons/moon/night.png" v-if="weather.weather[0].main.toLowerCase() == 'clear' && format(new Date (dateBuilder()), 'HH') > '18'">
                         <!-- Cloud -->
                         <img src="@/assets/icons/cloud/cloud_rain.png" v-if="weather.weather[0].main.toLowerCase() == 'shower rain'">
+                        <img src="@/assets/icons/cloud/cloud_rain.png" v-if="weather.weather[0].main.toLowerCase() == 'rain' && weather.clouds.all > 70">
                         <img src="@/assets/icons/cloud/cloud_thunderstorm.png" v-if="weather.weather[0].main.toLowerCase() == 'thunderstorm'">
                         <img src="@/assets/icons/cloud/cloud_snow.png" v-if="weather.weather[0].main.toLowerCase() == 'thunderstorm'">
                         <img src="@/assets/icons/cloud/cloud.png" v-if="weather.weather[0].main.toLowerCase() == 'clouds'">
                         <img src="@/assets/icons/cloud/cloud.png" v-if="weather.weather[0].main.toLowerCase() == 'cloud'">
                         <img src="@/assets/icons/cloud/cloud.png" v-if="weather.weather[0].main.toLowerCase() == 'broken clouds'">
                         <img src="@/assets/icons/sun/day_cloudy.png" v-if="weather.weather[0].main.toLowerCase() == 'few clouds'">
+                        <img src="@/assets/icons/sun/day_cloudy.png" v-if="weather.weather[0].main.toLowerCase() == 'fog'">
                     </div>
                 </div>
             </div>
@@ -257,10 +259,18 @@ export default {
         width: 100%;
         padding: 0 5% 10vh 5%;
 
+        @media only screen and (max-width: 1600px) {
+            grid-template-columns: 1fr;
+        }
+
         .container {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 32px;
+        
+            @media only screen and (max-width: 768px) {
+                grid-template-columns: 1fr;
+            }
         }
 
         .ipsum-container {
@@ -341,6 +351,10 @@ export default {
 
                     img {
                         width: 420px;
+
+                        @media only screen and (max-width: 768px) {
+                            width: 210px;
+                        }
                     }
                 }
             }
