@@ -380,6 +380,11 @@ export default {
             -moz-box-shadow: 0px 2px 40px 0px rgba(0,0,0,0.025);
             box-shadow: 0px 2px 40px 0px rgba(0,0,0,0.025);
 
+            @media only screen and (max-width: 768px) {
+                width: 100%;
+                margin: 0 32px;
+            }
+
             &::placeholder {
                 opacity: .6;
             }

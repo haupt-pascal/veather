@@ -66,16 +66,19 @@ function navigationResponsive() {
         background: #fff;
         font-size: 14px;
         .nav--left {
-            height: 100%;
+            width: 33%;
             display: flex;
             align-items: center;
+            justify-content: flex-start;
             img {
-                height: 50%;
+                width: 15%;
             }
         }
         .nav--mid {
             display: flex;
             align-items: center;
+            justify-content: center;
+            width: 33%;
             a {
                 margin: 0 32px;
 
@@ -108,8 +111,10 @@ function navigationResponsive() {
             }
         }
         .nav--right {
+            width: 33%;
             display: flex;
             align-items: center;
+            justify-content: flex-end;
             a {
                 background: #DEE2FF;
                 padding: 12px 32px;
@@ -120,6 +125,7 @@ function navigationResponsive() {
 
     .nav--right-responsive {
         display: none;
+        cursor: pointer;
     }
 
     @media only screen and (max-width: 1128px) {
@@ -129,18 +135,21 @@ function navigationResponsive() {
             &.active {
                 display: grid;
                 justify-content: center;
+                align-items: center;
                 position: absolute;
                 top: 7.5vh;
                 left: 50%;
                 transform: translateX(-50%);
                 width: 100%;
-                background: red;
-                height: 25vh;
+                height: 50vh;
+                z-index: 9999999;
 
                 .nav--left {
-                    height: 15%;
+                    width: 100%;
+                    justify-content: center;
                     img {
-                        height: 100%;
+                        width: 20%;
+
                     }
                 }
 
@@ -148,6 +157,19 @@ function navigationResponsive() {
                     display: grid;
                     justify-content: center;
                     align-items: center;
+                    z-index: inherit;
+                    margin: 0 auto;
+
+                    a {
+                        margin: 6px 0;
+
+                        &:first-child {
+                            margin-top: 32px;
+                        }
+                        &:last-child {
+                            margin-bottom: 32px;
+                        }
+                    }
                 }
 
                 .nav--right {
@@ -160,10 +182,12 @@ function navigationResponsive() {
         }
 
         .nav--right-responsive {
+            height: 7.5vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            margin: 12px 0 0 12px;
+            padding: 24px;
+            background: white;
             .hamburger-bar {
                 height: 2px;
                 width: 14px;

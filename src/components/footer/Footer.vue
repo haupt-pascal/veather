@@ -33,7 +33,7 @@ function navigationResponsive() {
             <div class="footer--left">
                 <img src="../../assets/logo.png"> 
             </div>
-            <div class="nav--mid">
+            <div class="footer--mid">
             <a v-for="navbarButton in buttons" :key="navbarButton.label" :href="navbarButton.url">
                 {{ navbarButton.label }}
             </a>
@@ -105,6 +105,33 @@ function navigationResponsive() {
                 background: #DEE2FF;
                 padding: 12px 32px;
                 border-radius: 100px;
+            }
+        }
+    }
+
+    @media only screen and (max-width: 768px) {
+        .footer {
+            display: grid;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            padding: 32px 0;
+
+            .footer--left {
+                justify-content: center;
+                img {
+                    height: auto;
+                    width: 20%;
+                }
+            }
+
+            .footer--mid {
+                justify-content: center;
+                margin: 32px 0;
+            }
+
+            .footer--right {
+                justify-content: center;
             }
         }
     }
